@@ -1,0 +1,11 @@
+# globalbank-postgresql/values.yaml
+postgresql:
+  global:
+    postgresql:
+      auth: 
+        database: streamrecord
+        username: streamuser
+        existingSecret: streamrecorder-postgresql-credentials
+        secretKeys:
+          adminPasswordKey: "postgres-password"
+          userPasswordKey: "dev-password"

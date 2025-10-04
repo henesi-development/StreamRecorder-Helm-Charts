@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-cm
+data:
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://streamrecorder-postgresql:5432/streamrecord"
+  SERVER_PORT: "8100"
+  SPRING_DATASOURCE_MAXIMUM_POOL_SIZE: "10"
+  SPRING_SERVER_SERVLET_CONTEXT_PATH: "/api"

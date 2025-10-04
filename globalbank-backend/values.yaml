@@ -1,0 +1,7 @@
+image:
+  repository: docker.io/gcieplechowicz/streamrecorder-api
+  tag: "0.0.1"
+
+service:
+  type: ClusterIP
+  port: 80
