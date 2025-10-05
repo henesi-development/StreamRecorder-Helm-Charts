@@ -1,6 +1,6 @@
 apiVersion: v2
-name: globalbank-postgresql
-description: "Bitnami PostgreSQL wrapper for GlobalBank"
+name: streamrecorder-postgresql
+description: "Bitnami PostgreSQL wrapper for streamrecorder"
 version: 0.1.0
 dependencies:
   - name: postgresql

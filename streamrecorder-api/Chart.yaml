@@ -1,6 +1,6 @@
 apiVersion: v2
-name: globalbank-backend
-description: A Helm chart for GlobalBank-API component
+name: streamrecorder-api
+description: A Helm chart for streamrecorder-API component
 type: application
 version: 0.1.0
 appVersion: "1.0"

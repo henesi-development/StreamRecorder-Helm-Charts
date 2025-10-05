@@ -1,4 +1,4 @@
-# globalbank-postgresql/values.yaml
+# streamrecorder-postgresql/values.yaml
 postgresql:
   global:
     postgresql:
