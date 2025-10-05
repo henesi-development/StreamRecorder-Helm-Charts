@@ -4,5 +4,5 @@ description: "Bitnami PostgreSQL wrapper for streamrecorder"
 version: 0.1.0
 dependencies:
   - name: postgresql
-    version: "16.3.0"
+    version: "17.6.0"
     repository: "https://charts.bitnami.com/bitnami"
