@@ -1,8 +1,0 @@
-apiVersion: v2
-name: streamrecorder-postgresql
-description: "Bitnami PostgreSQL wrapper for streamrecorder"
-version: 0.1.0
-dependencies:
-  - name: postgresql
-    version: "17.6.0"
-    repository: "https://charts.bitnami.com/bitnami"
