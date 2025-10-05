@@ -10,17 +10,3 @@ spec:
   hostPath:
     path: /mnt/d/WSL/Recordings   # <- path on your Windows/WSL disk
     type: DirectoryOrCreate
-
-
-----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: recordings-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 100Gi
