@@ -1,0 +1,86 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: streamrecorder-workflow
+  namespace: stream-recorder
+spec:
+  serviceAccountName: argo-workflow-sa
+  entrypoint: main
+  onExit: notify-exit    # always runs after main, success or failure
+  arguments:
+    parameters:
+      - name: RECORDING_JOB
+      - name: PLAYLIST_URL
+      - name: STREAMER_NAME
+  
+  ttlStrategy:
+    secondsAfterCompletion: 86400   # delete 1 day (86400s) after workflow finishes
+    secondsAfterSuccess: 3600       # delete 1 hour after success
+    secondsAfterFailure: 7200       # delete 2 hours after failure
+
+  volumes:
+    - name: recordings
+      hostPath:
+        path: /mnt/d/WSL/Recordings   # local disk folder on WSL
+        type: DirectoryOrCreate
+
+  templates:
+    # 1️⃣ Main sequence
+    - name: main
+      steps:
+        - - name: notify-start
+            template: notify-api
+            arguments:
+              parameters:
+                - name: status
+                  value: "RUNNING"
+        - - name: record-hls
+            template: record-hls
+
+    # 2️⃣ Notification template
+    - name: notify-api
+      inputs:
+        parameters:
+          - name: status
+      container:
+        image: curlimages/curl:8.6.0
+        command: [sh, -c]
+        args:
+          - >
+            STATUS="{{inputs.parameters.status}}";
+            if [ "$STATUS" = "Succeeded" ]; then STATUS="SUCCEEDED";
+            elif [ "$STATUS" = "Failed" ]; then STATUS="FAILED";
+            elif [ "$STATUS" = "Error" ]; then STATUS="FAILED";
+            fi;
+            echo "Notifying API with status: $STATUS";
+            curl -X 'PUT' \
+              'http://streamrecorder-api.stream-recorder.svc.cluster.local:80/api/jobs/"{{workflow.parameters.RECORDING_JOB}}"/status/"$STATUS"' \
+              -H 'accept: */*' \
+              -H 'Content-Type: application/json';
+
+    # 3️⃣ Main recorder container
+    - name: record-hls
+      container:
+        image: gcieplechowicz/streamrecorder-worker:0.1.0
+        env:
+          - name: PLAYLIST_URL
+            value: "{{workflow.parameters.PLAYLIST_URL}}"
+          - name: STREAMER_NAME
+            value: "{{workflow.parameters.STREAMER_NAME}}"
+          - name: RECORDING_JOB
+            value: "{{workflow.parameters.RECORDING_JOB}}"
+          - name: OUTPUT_DIR
+            value: "/mnt/recordings/"
+        volumeMounts:
+          - name: recordings
+            mountPath: /mnt/recordings
+
+    # 4️⃣ onExit handler
+    - name: notify-exit
+      steps:
+        - - name: notify-finish
+            template: notify-api
+            arguments:
+              parameters:
+                - name: status
+                  value: "{{workflow.status}}"
