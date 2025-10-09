@@ -1,0 +1,16 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  instances: 1
+
+  storage:
+    size: 1Gi
+
+  bootstrap:
+    initdb:
+      database: streamrecord
+      owner: streamuser
+      secret:
+        name: streamrecorder-api-secret
