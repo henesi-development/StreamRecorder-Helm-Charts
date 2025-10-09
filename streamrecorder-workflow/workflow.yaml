@@ -54,7 +54,7 @@ spec:
             fi;
             echo "Notifying API with status: $STATUS";
             curl -X 'PUT' \
-              'http://streamrecorder-api.stream-recorder.svc.cluster.local:80/api/jobs/"{{workflow.parameters.RECORDING_JOB}}"/status/"$STATUS"' \
+              "http://streamrecorder-api.stream-recorder.svc.cluster.local:80/api/jobs/{{workflow.parameters.RECORDING_JOB}}/status/$STATUS" \
               -H 'accept: */*' \
               -H 'Content-Type: application/json';
 
