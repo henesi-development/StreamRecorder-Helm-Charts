@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: filebrowser/filebrowser:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"        
+              memory: "128Mi"   
+            limits:
+              cpu: "500m"        
+              memory: "512Mi"    
+          env:
+            - name: FB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: filebrowser-secret
+                  key: username
+            - name: FB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: filebrowser-secret
+                  key: password
+          volumeMounts:
+            - name: recordings
+              mountPath: /mnt/recordings
+      volumes:
+        - name: recordings
+          hostPath:
+            path: /mnt/d/WSL/Recordings   # local disk folder on WSL
+            type: DirectoryOrCreate
