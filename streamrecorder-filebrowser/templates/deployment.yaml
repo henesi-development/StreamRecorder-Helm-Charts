@@ -29,12 +29,12 @@ spec:
             - name: FB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: filebrowser-secret
+                  name: {{ .Chart.Name }}-secret
                   key: username
             - name: FB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: filebrowser-secret
+                  name: {{ .Chart.Name }}-secret
                   key: password
           volumeMounts:
             - name: recordings
