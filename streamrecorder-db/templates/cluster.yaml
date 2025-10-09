@@ -13,4 +13,4 @@ spec:
       database: streamrecord
       owner: streamuser
       secret:
-        name: streamrecorder-api-secret
+        name: {{ .Chart.Name }}-secret
