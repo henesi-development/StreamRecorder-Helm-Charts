@@ -25,17 +25,6 @@ spec:
             limits:
               cpu: "500m"        
               memory: "512Mi"    
-          env:
-            - name: FB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
-                  key: username
-            - name: FB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
-                  key: password
           volumeMounts:
             - name: recordings
               mountPath: /mnt/recordings
