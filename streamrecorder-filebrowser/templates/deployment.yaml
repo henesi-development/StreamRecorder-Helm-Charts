@@ -25,6 +25,9 @@ spec:
             limits:
               cpu: "500m"        
               memory: "512Mi"    
+          env:
+            - name: FB_ROOT
+              value: /mnt/recordings
           volumeMounts:
             - name: recordings
               mountPath: /mnt/recordings
