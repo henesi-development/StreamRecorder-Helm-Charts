@@ -61,7 +61,7 @@ spec:
     # 3️⃣ Main recorder container
     - name: record-hls
       container:
-        image: gcieplechowicz/streamrecorder-worker:0.1.5
+        image: gcieplechowicz/streamrecorder-worker:0.1.6
         env:
           - name: PLAYLIST_URL
             value: "{{workflow.parameters.PLAYLIST_URL}}"
