@@ -34,7 +34,7 @@ spec:
         - name: data
           mountPath: /data
         - name: buckets
-          mountPath: /etc/minio/buckets
+          mountPath: /etc/minio/
           readOnly: true
         lifecycle:
           postStart:
