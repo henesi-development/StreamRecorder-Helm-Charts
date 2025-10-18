@@ -7,5 +7,6 @@ spec:
     storage: 200Gi
   accessModes:
     - ReadWriteOnce
+  storageClassName: ""
   hostPath:
     path: /mnt/d/WSL/minio-data
