@@ -23,7 +23,7 @@ spec:
             - containerPort: 9001 # Web console
           envFrom:
             - secretRef:
-                name: minio-secret
+                name: {{ .Chart.Name }}--secret
           volumeMounts:
             - name: minio-data
               mountPath: /data
@@ -37,4 +37,4 @@ spec:
       volumes:
         - name: minio-data
           persistentVolumeClaim:
-            claimName: minio-pvc
+            claimName: {{ .Chart.Name }}-pvc
