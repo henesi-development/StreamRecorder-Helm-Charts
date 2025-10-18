@@ -33,34 +33,20 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /data
-      initContainers:
-      - name: bucket-init
-        image: quay.io/minio/mc:latest
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          until mc alias set localminio http://{{ .Chart.Name }}-service:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; do
-            echo "Waiting for MinIO to be ready..."
-            sleep 5
-          done
-          
-          for bucket in $(cat /etc/minio/buckets); do
-            mc mb --ignore-existing localminio/$bucket;
-          done
-        env:
-        - name: MINIO_ROOT_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Chart.Name }}-secret
-              key: rootUser
-        - name: MINIO_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Chart.Name }}-secret
-              key: rootPassword
-        volumeMounts:
         - name: buckets
-          mountPath: /etc/minio
+          mounthPath: /etc/minio/buckets
+          readOnly: true
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                    mc alias set localminio http://{{ .Chart.Name }}-service:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD;
+                    for bucket in $(cat /etc/minio/buckets); do
+                        mc mb --ignore-existing localminio/$bucket;
+                    done
       volumes:
       - name: data
         persistentVolumeClaim:
