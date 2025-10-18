@@ -39,7 +39,6 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
         - |
-          mc alias set localminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD;
           for bucket in $(cat /etc/minio/buckets); do
             mc mb --ignore-existing localminio/$bucket;
           done
