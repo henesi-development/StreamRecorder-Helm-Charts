@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Chart.Name }}-deployment
-  labels:
-    app: minio
 spec:
   replicas: 1
   selector:
@@ -15,26 +13,54 @@ spec:
         app: minio
     spec:
       containers:
-        - name: minio
-          image: quay.io/minio/minio:latest
-          args: ["server", "/data", "--console-address", ":9001"]
-          ports:
-            - containerPort: 9000 # S3 API
-            - containerPort: 9001 # Web console
-          envFrom:
-            - secretRef:
-                name: {{ .Chart.Name }}-secret
-          volumeMounts:
-            - name: minio-data
-              mountPath: /data
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
-              cpu: "2"
-              memory: "4Gi"
+      - name: minio
+        image: quay.io/minio/minio:latest
+        args: ["server", "/data", "--console-address", ":9001"]
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Chart.Name }}-secret
+              key: rootUser
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Chart.Name }}-secret
+              key: rootPassword
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      initContainers:
+      - name: bucket-init
+        image: quay.io/minio/mc:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          mc alias set localminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD;
+          for bucket in $(cat /etc/minio/buckets); do
+            mc mb --ignore-existing localminio/$bucket;
+          done
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Chart.Name }}-secret
+              key: rootUser
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Chart.Name }}-secret
+              key: rootPassword
+        volumeMounts:
+        - name: buckets
+          mountPath: /etc/minio
       volumes:
-        - name: minio-data
-          persistentVolumeClaim:
-            claimName: {{ .Chart.Name }}-pvc
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-pvc
+      - name: buckets
+        configMap:
+          name: {{ .Chart.Name }}-buckets
