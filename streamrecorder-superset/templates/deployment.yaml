@@ -22,8 +22,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Chart.Name }}-secret
                   key: SUPERSET_SECRET_KEY
-            - name: SUPERSET_SQLALCHEMY_DATABASE_URI
-              value: postgresql+psycopg2://streamuser:streampassword@streamrecorder-db-rw:5432/streamrecord
             - name: SUPERSET_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -43,20 +41,17 @@ spec:
             - /bin/bash
             - -c
             - |
-              echo "SUPERSET_SQLALCHEMY_DATABASE_URI=$SUPERSET_SQLALCHEMY_DATABASE_URI"
-              if [ -z "$SUPERSET_SQLALCHEMY_DATABASE_URI" ]; then
-                echo "ERROR: Database URI is empty!"
-                exit 1
-              fi
-              export SUPERSET_SQLALCHEMY_DATABASE_URI
-              superset db upgrade
+              export SUPERSET_HOME=/app/superset_home &&
               superset fab create-admin \
                 --username $SUPERSET_ADMIN_USERNAME \
                 --firstname Admin \
                 --lastname User \
                 --email $SUPERSET_ADMIN_EMAIL \
-                --password $SUPERSET_ADMIN_PASSWORD
-              superset init
+                --password $SUPERSET_ADMIN_PASSWORD &&
+              superset db upgrade
+          volumeMounts:
+            - mountPath: /app/superset_home
+              name: superset-db
       containers:
         - name: superset
           image: apache/superset:3.1.3
@@ -66,10 +61,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Chart.Name }}-secret
                   key: SUPERSET_SECRET_KEY
-            - name: SUPERSET_SQLALCHEMY_DATABASE_URI
-              value: postgresql+psycopg2://streamuser:streampassword@streamrecorder-db-rw:5432/streamrecord
           ports:
             - containerPort: 8088
+          volumeMounts:
+            - mountPath: /app/superset_home
+              name: superset-db
           resources:
             requests:
               memory: "128Mi"
@@ -77,3 +73,7 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "0.5"
+      volumes:
+        - name: superset-db
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-sqlite-pvc
