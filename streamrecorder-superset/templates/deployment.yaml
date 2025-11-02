@@ -22,6 +22,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Chart.Name }}-secret
                   key: SUPERSET_SECRET_KEY
+            - name: SUPERSET_SQLALCHEMY_DATABASE_URI
+              value: postgresql+psycopg2://streamuser:streampassword@streamrecorder-db-rw:5432/streamrecord
           ports:
             - containerPort: 8088
           resources:
