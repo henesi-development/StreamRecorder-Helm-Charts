@@ -26,7 +26,7 @@ spec:
           - name: ETL_DAYS_BACK
 
       container:
-        image: gcieplechowicz/streamrecorder-etl:0.0.3
+        image: gcieplechowicz/streamrecorder-etl:0.0.4
         imagePullPolicy: IfNotPresent
 
         # Spark job class
