@@ -8,6 +8,15 @@ spec:
   storage:
     size: 5Gi
 
+  # Resource requests and limits for the PostgreSQL pod
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "0.25"
+    limits:
+      memory: "512Mi"
+      cpu: "0.5"
+
   bootstrap:
     initdb:
       database: streamrecord
