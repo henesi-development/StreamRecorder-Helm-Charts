@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: streamrecorder-etl
+  namespace: stream-recorder
+spec:
+  serviceAccountName: argo-workflow-sa
+  entrypoint: run-spark-job
+  ttlStrategy:
+    secondsAfterCompletion: 86400   # delete 1 day after completion
+    secondsAfterSuccess: 3600       # delete 1 hour after success
+    secondsAfterFailure: 7200       # delete 2 hours after failure
+
+  arguments:
+    parameters:
+      - name: SPARK_MAIN_CLASS
+        value: com.henesi.etl.app.RecordingExport
+      - name: ETL_DAYS_BACK
+        value: "1"
+
+  templates:
+    - name: run-spark-job
+      inputs:
+        parameters:
+          - name: SPARK_MAIN_CLASS
+          - name: ETL_DAYS_BACK
+
+      container:
+        image: gcieplechowicz/streamrecorder-etl:0.0.1
+        imagePullPolicy: IfNotPresent
+
+        # Spark job class
+        env:
+          - name: SPARK_MAIN_CLASS
+            value: "{{inputs.parameters.SPARK_MAIN_CLASS}}"
+
+        # Use Dockerfile ENTRYPOINT (spark-submit)
+        command: [] 
+        args:
+          - "--conf"
+          - "etl.daysBack={{inputs.parameters.ETL_DAYS_BACK}}"
+
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1"
+          limits:
+            memory: "2Gi"
+            cpu: "2"
