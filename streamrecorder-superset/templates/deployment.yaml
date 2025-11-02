@@ -43,7 +43,12 @@ spec:
             - /bin/bash
             - -c
             - |
-              export SUPERSET_SQLALCHEMY_DATABASE_URI=$SUPERSET_SQLALCHEMY_DATABASE_URI
+              echo "SUPERSET_SQLALCHEMY_DATABASE_URI=$SUPERSET_SQLALCHEMY_DATABASE_URI"
+              if [ -z "$SUPERSET_SQLALCHEMY_DATABASE_URI" ]; then
+                echo "ERROR: Database URI is empty!"
+                exit 1
+              fi
+              export SUPERSET_SQLALCHEMY_DATABASE_URI
               superset db upgrade
               superset fab create-admin \
                 --username $SUPERSET_ADMIN_USERNAME \
