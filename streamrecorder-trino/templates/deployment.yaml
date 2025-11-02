@@ -26,8 +26,15 @@ spec:
           ports:
             - containerPort: 8080
           volumeMounts:
-            - mountPath: /etc/trino/catalog
-              name: trino-config
+            - name: trino-config
+              mountPath: /etc/trino/config.properties
+              subPath: config.properties
+            - name: trino-config
+              mountPath: /etc/trino/jvm.config
+              subPath: jvm.config
+            - name: trino-config
+              mountPath: /etc/trino/catalog/minio.properties
+              subPath: minio.properties
       volumes:
         - name: trino-config
           configMap:
