@@ -44,7 +44,7 @@ spec:
           - name: SPARK_MAIN_CLASS
           - name: ETL_DAYS_BACK
       container:
-        image: gcieplechowicz/streamrecorder-etl:0.0.10
+        image: gcieplechowicz/streamrecorder-etl:0.0.11
         imagePullPolicy: IfNotPresent
         env:
           - name: SPARK_MAIN_CLASS
