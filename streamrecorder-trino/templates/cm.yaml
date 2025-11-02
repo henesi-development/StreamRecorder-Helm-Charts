@@ -12,9 +12,6 @@ data:
     query.max-memory-per-node=1GB
     discovery-server.enabled=true
     discovery.uri=http://streamrecorder-trino-service:8080
-  jvm.config: |
-    -Xmx768m
-    -XX:+UseG1GC
   minio.properties: |
     connector.name=hive-hadoop2
     hive.s3.aws-access-key=admin
