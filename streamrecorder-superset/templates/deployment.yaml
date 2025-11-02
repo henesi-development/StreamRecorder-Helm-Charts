@@ -42,6 +42,7 @@ spec:
             - -c
             - |
               export SUPERSET_HOME=/app/superset_home &&
+              pip install --no-cache-dir sqlalchemy-trino &&
               superset db upgrade &&
               superset fab create-admin \
                 --username $SUPERSET_ADMIN_USERNAME \
