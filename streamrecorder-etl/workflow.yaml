@@ -38,7 +38,8 @@ spec:
         command: [] 
         args:
           - "--conf"
-          - "spark.driver.extraJavaOptions=-Detl.daysBack={{inputs.parameters.ETL_DAYS_BACK}}"
+          - "spark.etl.daysBack={{inputs.parameters.ETL_DAYS_BACK}}"
+
 
         resources:
           requests:
