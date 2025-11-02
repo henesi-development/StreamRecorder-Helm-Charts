@@ -15,7 +15,7 @@ data:
   jvm.config: |
     -Xmx2G
     -XX:+UseG1GC
-  catalog/minio.properties: |
+  minio.properties: |
     connector.name=hive-hadoop2
     hive.s3.aws-access-key=admin
     hive.s3.aws-secret-key=admin1234

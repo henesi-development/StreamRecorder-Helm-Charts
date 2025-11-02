@@ -21,7 +21,10 @@ spec:
           volumeMounts:
             - name: trino-config
               mountPath: /etc/trino
+            - name: trino-config
+              mountPath: /etc/trino/catalog/minio.properties
+              subPath: minio.properties
       volumes:
         - name: trino-config
           configMap:
-            name: trino-config
+            name: streamrecorder-trino
