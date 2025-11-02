@@ -5,4 +5,5 @@ metadata:
 data:
   buckets: |
     recordings
-    spark
+    spark-raw
+    spark-report

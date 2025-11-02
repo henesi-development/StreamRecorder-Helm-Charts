@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: streamrecorder-etl-cron
+  namespace: stream-recorder
+spec:
+  schedule: "0 2 * * *"  # every day at 2:00 AM UTC
+  timezone: "UTC"        # optional
+  concurrencyPolicy: "Forbid"  # prevent overlapping runs
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  workflowSpec:
+    workflowTemplateRef:
+      name: streamrecorder-etl   # reference your existing WorkflowTemplate
+    arguments:
+      parameters:
+        - name: ETL_DAYS_BACK
+          value: "1"
+        - name: SPARK_MAIN_CLASS
+          value: "com.henesi.etl.app.RecordingReport"
