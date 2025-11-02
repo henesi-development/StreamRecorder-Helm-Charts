@@ -24,6 +24,11 @@ spec:
               memory: "256Mi"
               cpu: "0.5"
           env:
+            - name: SUPERSET_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: SUPERSET_SECRET_KEY
             - name: SUPERSET_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
