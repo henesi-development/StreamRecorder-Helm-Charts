@@ -13,7 +13,7 @@ data:
     discovery-server.enabled=true
     discovery.uri=http://trino:8080
   jvm.config: |
-    -Xmx2G
+    -Xmx1G
     -XX:+UseG1GC
   minio.properties: |
     connector.name=hive-hadoop2
@@ -22,4 +22,5 @@ data:
     hive.s3.endpoint=http://streamrecorder-minio-service.stream-recorder.svc.cluster.local:9000
     hive.s3.path-style-access=true
     hive.s3.ssl.enabled=false
-    hive.metastore=none
+    hive.metastore=file
+    hive.metastore.catalog.dir=file:///tmp/trino-metastore
