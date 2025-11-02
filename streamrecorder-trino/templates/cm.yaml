@@ -11,9 +11,9 @@ data:
     query.max-memory=5GB
     query.max-memory-per-node=1GB
     discovery-server.enabled=true
-    discovery.uri=http://trino:8080
+    discovery.uri=http://streamrecorder-trino-service:8080
   jvm.config: |
-    -Xmx1G
+    -Xmx768m
     -XX:+UseG1GC
   minio.properties: |
     connector.name=hive-hadoop2
