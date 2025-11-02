@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Chart.Name }}-batch
+  namespace: stream-recorder
+spec:
+  template:
+    spec:
+      containers:
+        - name: superset-bootstrap
+          image: apache/superset:3.1.3
+          env:
+            - name: SUPERSET_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: SUPERSET_ADMIN_USERNAME
+            - name: SUPERSET_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: SUPERSET_ADMIN_PASSWORD
+            - name: SUPERSET_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: SUPERSET_ADMIN_EMAIL
+            - name: SUPERSET_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: SUPERSET_SECRET_KEY
+          command:
+            - "superset"
+            - "fab"
+            - "create-admin"
+            - "--username"
+            - "$(SUPERSET_ADMIN_USERNAME)"
+            - "--firstname"
+            - "Admin"
+            - "--lastname"
+            - "User"
+            - "--email"
+            - "$(SUPERSET_ADMIN_EMAIL)"
+            - "--password"
+            - "$(SUPERSET_ADMIN_PASSWORD)"
+      restartPolicy: Never
+  backoffLimit: 1
