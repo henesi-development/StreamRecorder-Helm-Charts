@@ -20,7 +20,7 @@ spec:
             - name: SUPERSET_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: superset-secret
+                  name: {{ .Chart.Name }}-secret
                   key: SUPERSET_SECRET_KEY
           ports:
             - containerPort: 8088
