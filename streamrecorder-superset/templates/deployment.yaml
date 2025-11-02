@@ -27,17 +27,17 @@ spec:
             - name: SUPERSET_ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: superset-secret
+                  name:  {{ .Chart.Name }}-secret
                   key: SUPERSET_ADMIN_USERNAME
             - name: SUPERSET_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: superset-secret
+                  name:  {{ .Chart.Name }}-secret
                   key: SUPERSET_ADMIN_PASSWORD
             - name: SUPERSET_ADMIN_EMAIL
               valueFrom:
                 secretKeyRef:
-                  name: superset-secret
+                  name:  {{ .Chart.Name }}-secret
                   key: SUPERSET_ADMIN_EMAIL
           ports:
             - containerPort: 8088
