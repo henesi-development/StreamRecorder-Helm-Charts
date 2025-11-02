@@ -30,6 +30,9 @@ spec:
               mountPath: /etc/trino/config.properties
               subPath: config.properties
             - name: trino-config
+              mountPath: /etc/trino/jvm.config
+              subPath: jvm.config
+            - name: trino-config
               mountPath: /etc/trino/catalog/minio.properties
               subPath: minio.properties
       volumes:
