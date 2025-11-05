@@ -8,18 +8,20 @@ data:
     coordinator=true
     node-scheduler.include-coordinator=true
     http-server.http.port=8080
-    query.max-memory=5GB
-    query.max-memory-per-node=1GB
+    query.max-memory=512MB
+    query.max-memory-per-node=256MB
     discovery-server.enabled=true
     discovery.uri=http://streamrecorder-trino-service:8080
   jvm.config: |
-    -Xmx2G 
+    -Xmx512M
     -XX:+UseG1GC
+    -XX:+UseStringDeduplication
+    -XX:+ExitOnOutOfMemoryError
   minio.properties: |
     connector.name=hive-hadoop2
     hive.s3.aws-access-key=admin
     hive.s3.aws-secret-key=admin1234
-    hive.s3.endpoint=http://streamrecorder-minio-service.stream-recorder.svc.cluster.local:9000
+    hive.s3.endpoint=http://streamrecorder-minio-service:9000
     hive.s3.path-style-access=true
     hive.s3.ssl.enabled=false
     hive.metastore=file
